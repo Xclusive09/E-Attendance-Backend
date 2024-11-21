@@ -1,4 +1,5 @@
 import { Attendance } from '../models/attendanceModel.js';
+import { User } from '../models/userModel.js';
 import jwt from 'jsonwebtoken';
 import bcrypt from 'bcryptjs';
 import pool from '../utils/mysqlClient.js';
@@ -23,6 +24,15 @@ export const adminLogin = async (req, res) => {
     res.status(200).json({ token });
   } catch (error) {
     res.status(500).json({ error: 'Failed to log in' });
+  }
+};
+
+export const getUsers = async (req, res) => {
+  try {
+    const [rows] = await pool.query('SELECT * FROM users');
+    res.status(200).json({ users: rows });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
   }
 };
 

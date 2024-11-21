@@ -16,6 +16,7 @@ app.use('/attendance', attendanceRoutes);
 app.use('/admin', adminRoutes);
 app.use('/qr', qrRoutes);
 
+// Ensure initializeAdmin is only called once
 initializeAdmin();
 
 app.listen(config.port, () => {
