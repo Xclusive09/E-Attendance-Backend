@@ -5,10 +5,11 @@ dotenv.config();
 export default {
   port: process.env.PORT || 5000,
   jwtSecret: process.env.JWT_SECRET,
-  dbHost: process.env.AIVEN_DB_HOST, // Update this line
-  dbUser: process.env.AIVEN_DB_USER, // Update this line
-  dbPassword: process.env.AIVEN_DB_PASSWORD, // Update this line
-  dbName: process.env.AIVEN_DB_NAME, // Update this line
+  dbHost: process.env.AIVEN_DB_HOST,
+  dbUser: process.env.AIVEN_DB_USER,
+  dbPassword: process.env.AIVEN_DB_PASSWORD,
+  dbName: process.env.AIVEN_DB_NAME,
+  dbPort: process.env.AIVEN_DB_PORT, // Add this line
   officeLatitude: parseFloat(process.env.OFFICE_LATITUDE),
   officeLongitude: parseFloat(process.env.OFFICE_LONGITUDE),
   officeRadius: parseFloat(process.env.OFFICE_RADIUS),
