@@ -15,4 +15,8 @@ export default {
   officeRadius: parseFloat(process.env.OFFICE_RADIUS),
   openingHours: process.env.OPENING_HOURS,
   closingHours: process.env.CLOSING_HOURS,
+  corsOrigin: process.env.CORS_ORIGIN,
+  corsMethods: process.env.CORS_METHODS,
+  corsAllowedHeaders: process.env.CORS_ALLOWED_HEADERS,
+  corsCredentials: process.env.CORS_CREDENTIALS === 'true',
 };

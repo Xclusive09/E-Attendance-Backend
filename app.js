@@ -8,8 +8,18 @@ import qrRoutes from './routes/qrRoutes.js';
 import initializeAdmin from './utils/initializeAdmin.js';
 
 const app = express();
-app.use(cors());
+
+const corsOptions = {
+  origin: config.corsOrigin,
+  methods: config.corsMethods,
+  allowedHeaders: config.corsAllowedHeaders,
+  credentials: config.corsCredentials,
+};
+
+app.use(cors(corsOptions));
 app.use(express.json());
+
+
 
 app.use('/auth', authRoutes);
 app.use('/attendance', attendanceRoutes);

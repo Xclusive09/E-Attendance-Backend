@@ -23,13 +23,19 @@ export const signin = async (req, res) => {
   const { email, password } = req.body;
 
   try {
+    console.log('Signin attempt:', { email, password });
     const result = await User.loginUser(email, password);
-    if (result.error) return res.status(400).json({ error: result.error });
+    if (result.error) {
+      console.log('Signin error:', result.error);
+      return res.status(400).json({ error: result.error });
+    }
 
     const token = jwt.sign({ userId: result.data.user.id }, config.jwtSecret, { expiresIn: '1h' });
+    console.log('Signin successful:', { userId: result.data.user.id });
     res.status(200).json({ token });
   } catch (error) {
-    res.status(400).json({ error: error.message });
+    console.error('Signin exception:', error.message);
+    res.status(500).json({ error: error.message });
   }
 };
 
