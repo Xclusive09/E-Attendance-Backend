@@ -13,14 +13,14 @@ const initializeAdmin = async () => {
   try {
     const [rows] = await pool.query('SELECT * FROM users WHERE role = ?', [adminRole]);
     if (rows.length === 0) {
-      
+      /*  
       const result = await User.createUser(adminEmail, adminPassword, adminFullName, adminUserName, adminPhoneNumber, adminRole, createdAt);
       if (result.error) {
         console.error('Error creating admin user:', result.error);
       } else {
         console.log('Admin user created');
       }
-    
+      */
       console.log('Admin user creation code is commented out.');
     } else {
       console.log('Admin user already exists');
@@ -29,5 +29,6 @@ const initializeAdmin = async () => {
     console.error('Error initializing admin user:', error.message);
   }
 };
+
 
 export default initializeAdmin;
