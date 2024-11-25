@@ -23,9 +23,10 @@ export const Attendance = {
     return isMatch;
   },
 
-  getAttendanceRecords: async () => {
+  getPersonalRecords: async (userId) => {
     const [rows] = await pool.query(
-      'SELECT * FROM attendance ORDER BY timestamp DESC'
+      'SELECT * FROM attendance WHERE user_id = ? ORDER BY timestamp DESC',
+      [userId]
     );
     return rows;
   },
