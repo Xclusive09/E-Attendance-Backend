@@ -16,8 +16,10 @@ const corsOptions = {
   credentials: config.corsCredentials,
 };
 
-app.use(cors(corsOptions));
-app.options('*', cors(corsOptions)); // Handle preflight requests
+//app.use(cors(corsOptions));
+//app.options('*', cors(corsOptions)); // Handle preflight requests
+app.use(cors({ origin: 'https://startupqr.vercel.app, http://localhost:5500' , credentials :  true,  methods: 'GET,PUT,POST,OPTIONS', allowedHeaders: 'Content-Type,Authorization' }));
+
 app.use(express.json());
 
 
