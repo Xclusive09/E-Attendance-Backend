@@ -18,7 +18,8 @@ const corsOptions = {
 
 //app.use(cors(corsOptions));
 //app.options('*', cors(corsOptions)); // Handle preflight requests
-app.use(cors({ origin: '*' , credentials :  true,  methods: 'GET,PUT,POST,OPTIONS', allowedHeaders: 'Content-Type,Authorization' }));
+//app.use(cors({ origin: '*' , credentials :  true,  methods: 'GET,PUT,POST,OPTIONS', allowedHeaders: 'Content-Type,Authorization' }));
+app.use(cors())
 
 app.use(express.json());
 
