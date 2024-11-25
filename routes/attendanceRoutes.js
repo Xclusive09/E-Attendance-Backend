@@ -1,5 +1,5 @@
 import express from 'express';
-import { markAttendance } from '../controllers/attendanceController.js';
+import { markAttendance, getPersonalRecords } from '../controllers/attendanceController.js';
 import { authenticateUser } from '../utils/middleware.js';
 
 const router = express.Router();
