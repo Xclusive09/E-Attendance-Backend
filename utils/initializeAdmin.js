@@ -27,7 +27,7 @@ const initializeAdmin = async () => {
     }
 
     // Store the hashed text "startupkano"
-    const hashedText = await bcrypt.hash('startupkano', 10);
+    const hashedText = await bcrypt.hash('StartUpKanoSession1', 10);
     await pool.query(
       'INSERT INTO attendance (qr_code_hash) VALUES (?)',
       [hashedText]
