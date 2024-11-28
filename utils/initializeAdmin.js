@@ -14,7 +14,7 @@ const initializeAdmin = async () => {
   try {
     const [rows] = await pool.query('SELECT * FROM users WHERE role = ?', [adminRole]);
     if (rows.length === 0) {
-      /*
+       /*
       const result = await User.createUser(adminEmail, adminPassword, adminFullName, adminUserName, adminPhoneNumber, adminRole, createdAt);
       if (result.error) {
         console.error('Error creating admin user:', result.error);
@@ -25,18 +25,9 @@ const initializeAdmin = async () => {
     } else {
       console.log('Admin user already exists');
     }
-
-    // Store the hashed text "startupkano"
-    const hashedText = await bcrypt.hash('StartUpKanoSession1', 10);
-    await pool.query(
-      'INSERT INTO attendance (qr_code_hash) VALUES (?)',
-      [hashedText]
-    );
-    console.log('QR code text stored');
   } catch (error) {
     console.error('Error initializing admin user:', error.message);
   }
 };
-
 
 export default initializeAdmin;

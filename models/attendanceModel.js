@@ -1,33 +1,31 @@
 import pool from '../utils/mysqlClient.js';
-import bcrypt from 'bcryptjs';
 
 export const Attendance = {
-  markAttendance: async (userId, qrCodeText) => {
-    const hashedText = await bcrypt.hash(qrCodeText, 10);
-    const [result] = await pool.query(
-      'INSERT INTO attendance (user_id, timestamp, qr_code_hash) VALUES (?, ?, ?)',
-      [userId, new Date(), hashedText]
-    );
-    return result;
-  },
-
-  verifyQRCode: async (qrCodeText) => {
-    const [rows] = await pool.query(
-      'SELECT qr_code_hash FROM attendance WHERE qr_code_hash = ?',
-      ['startupkano']
-    );
-    if (rows.length === 0) {
-      return false;
+  markAttendance: async (userId) => {
+    try {
+      const [result] = await pool.query(
+        'INSERT INTO attendance (user_id, timestamp) VALUES (?, ?)',
+        [userId, new Date()]
+      );
+      console.log('Attendance marked:', result);
+      return result;
+    } catch (error) {
+      console.error('Error marking attendance:', error.message);
+      throw error;
     }
-    const isMatch = await bcrypt.compare(qrCodeText, rows[0].qr_code_hash);
-    return isMatch;
   },
 
   getPersonalRecords: async (userId) => {
-    const [rows] = await pool.query(
-      'SELECT * FROM attendance WHERE user_id = ? ORDER BY timestamp DESC',
-      [userId]
-    );
-    return rows;
+    try {
+      const [rows] = await pool.query(
+        'SELECT * FROM attendance WHERE user_id = ? ORDER BY timestamp DESC',
+        [userId]
+      );
+      console.log('Personal records retrieved:', rows);
+      return rows;
+    } catch (error) {
+      console.error('Error retrieving personal records:', error.message);
+      throw error;
+    }
   },
 };
