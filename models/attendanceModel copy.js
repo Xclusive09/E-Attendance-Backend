@@ -2,19 +2,19 @@ import pool from '../utils/mysqlClient.js';
 import bcrypt from 'bcryptjs';
 
 export const Attendance = {
-  markAttendance: async (userId, qrCodeText) => {
+  markAttendance: async (userName, qrCodeText) => {
     const hashedText = await bcrypt.hash(qrCodeText, 10);
     const [result] = await pool.query(
-      'INSERT INTO attendance (user_id, timestamp, qr_code_hash) VALUES (?, ?, ?)',
-      [userId, new Date(), hashedText]
+      'INSERT INTO attendance (user_name, timestamp, qr_code_hash) VALUES (?, ?, ?)',
+      [userName, new Date(), hashedText]
     );
     return result;
   },
 
-  verifyQRCode: async (qrCodeText) => {
+  verifyQRCode: async (userName, qrCodeText) => {
     const [rows] = await pool.query(
-      'SELECT qr_code_hash FROM attendance WHERE qr_code_hash = ?',
-      ['startupkano']
+      'SELECT qr_code_hash FROM attendance WHERE user_name = ? ORDER BY timestamp DESC LIMIT 1',
+      [userName]
     );
     if (rows.length === 0) {
       return false;
