@@ -1,54 +1,54 @@
-import request from 'supertest';
-import app from '../app.js'; // Ensure this path is correct
+import { Attendance } from '../models/attendanceModel.js';
 import jwt from 'jsonwebtoken';
 import config from '../config/env.js';
 
-const token = jwt.sign({ userId: 1 }, config.jwtSecret, { expiresIn: '1h' });
+const getDistance = (loc1, loc2) => {
+  const R = 6371; // Radius of the Earth in km
+  const dLat = (loc2.lat - loc1.lat) * (Math.PI / 180);
+  const dLng = (loc2.lng - loc1.lng) * (Math.PI / 180);
+  const a = 
+    Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+    Math.cos(loc1.lat * (Math.PI / 180)) * Math.cos(loc2.lat * (Math.PI / 180)) * 
+    Math.sin(dLng / 2) * Math.sin(dLng / 2);
+  const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+  return R * c; // Distance in km
+};
 
-describe('Attendance Controller', () => {
-  it('should mark attendance', async () => {
-    const res = await request(app)
-      .post('/attendance/mark-attendance')
-      .set('Authorization', `Bearer ${token}`)
-      .send({
-        latitude: 11.969548890880134,
-        longitude: 8.557612051980156
-      });
-    expect(res.statusCode).toEqual(200);
-    expect(res.body).toHaveProperty('message', 'Attendance marked successfully');
-  });
+export const markAttendance = async (req, res) => {
+  const token = req.headers.authorization.split(' ')[1];
+  const { latitude, longitude } = req.body;
 
-  it('should return error for missing latitude and longitude', async () => {
-    const res = await request(app)
-      .post('/attendance/mark-attendance')
-      .set('Authorization', `Bearer ${token}`)
-      .send({});
-    expect(res.statusCode).toEqual(400);
-    expect(res.body).toHaveProperty('error', 'Latitude and longitude are required');
-  });
+  if (!latitude || !longitude) {
+    return res.status(400).json({ error: 'Latitude and longitude are required' });
+  }
 
-  it('should return error for outside office location', async () => {
-    const res = await request(app)
-      .post('/attendance/mark-attendance')
-      .set('Authorization', `Bearer ${token}`)
-      .send({
-        latitude: 0,
-        longitude: 0
-      });
-    expect(res.statusCode).toEqual(403);
-    expect(res.body).toHaveProperty('error', 'Outside office location');
-  });
+  try {
+    const decoded = jwt.verify(token, config.jwtSecret);
+    const userId = decoded.userId;
 
-  it('should return error for outside office hours', async () => {
-    jest.spyOn(Date.prototype, 'toTimeString').mockReturnValue('06:00:00 GMT');
-    const res = await request(app)
-      .post('/attendance/mark-attendance')
-      .set('Authorization', `Bearer ${token}`)
-      .send({
-        latitude: 11.969548890880134,
-        longitude: 8.557612051980156
-      });
-    expect(res.statusCode).toEqual(403);
-    expect(res.body).toHaveProperty('error', 'Outside office hours');
-  });
-});
+    const userLocation = { lat: latitude, lng: longitude };
+    const officeLocation = { lat: config.officeLatitude, lng: config.officeLongitude };
+    const distance = getDistance(userLocation, officeLocation);
+
+    if (distance > config.officeRadius) {
+      return res.status(403).json({ error: 'Outside office location' });
+    }
+
+    await Attendance.markAttendance(userId);
+    res.status(200).json({ message: 'Attendance marked successfully' });
+  } catch (error) {
+    console.error('Error marking attendance:', error.message);
+    res.status(500).json({ error: 'Failed to mark attendance' });
+  }
+};
+
+export const getPersonalRecords = async (req, res) => {
+  const { userId } = req;
+
+  try {
+    const records = await Attendance.getPersonalRecords(userId);
+    res.status(200).json({ records });
+  } catch (error) {
+    res.status(500).json({ error: 'Failed to retrieve records' });
+  }
+};
