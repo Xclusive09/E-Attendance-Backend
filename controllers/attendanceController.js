@@ -15,8 +15,6 @@ const getDistance = (loc1, loc2) => {
   return R * c; // Distance in km
 };
 
-
-
 export const markAttendance = async (req, res) => {
   const token = req.headers.authorization.split(' ')[1];
   const { latitude, longitude } = req.body;
@@ -44,7 +42,12 @@ export const markAttendance = async (req, res) => {
     }
 
     await Attendance.markAttendance(userId, userName);
-    res.status(200).json({ message: 'Attendance marked successfully' });
+    res.status(200).json({
+      message: 'Attendance marked successfully',
+      userLocation,
+      officeLocation,
+      radius: config.officeRadius
+    });
   } catch (error) {
     console.error('Error marking attendance:', error.message);
     res.status(500).json({ error: 'Failed to mark attendance' });
