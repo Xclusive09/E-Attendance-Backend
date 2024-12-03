@@ -1,12 +1,13 @@
 import pool from '../utils/mysqlClient.js';
 
 export const Attendance = {
-  markAttendance: async (userId) => {
+  markAttendance: async (userId, userName) => {
     try {
       const [result] = await pool.query(
-        'INSERT INTO attendance (user_id, timestamp) VALUES (?, ?)',
-        [userId, new Date()]
+        'INSERT INTO attendance (user_id, user_name, timestamp) VALUES (?, ?, ?)',
+        [userId, userName, new Date()]
       );
+
       console.log('Attendance marked:', result);
       return result;
     } catch (error) {

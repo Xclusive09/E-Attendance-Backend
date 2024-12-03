@@ -21,6 +21,23 @@ export const User = {
     }
   },
 
+  // Method to get user details by userId
+  getUserDetails: async (userId) => {
+    try {
+      const [rows] = await pool.query(
+        'SELECT id, user_name FROM users WHERE id = ?',
+        [userId]
+      );
+      if (rows.length > 0) {
+        return { data: rows[0], error: null };
+      }
+      return { data: null, error: 'User not found' };
+    } catch (error) {
+      return { data: null, error: error.message };
+    }
+  },
+
+
   // Method to login user
   loginUser: async (email, password) => {
     try {

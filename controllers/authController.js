@@ -23,14 +23,13 @@ export const signin = async (req, res) => {
   const { email, password } = req.body;
 
   try {
-    console.log('Signin attempt:', { email, password });
     const result = await User.loginUser(email, password);
     if (result.error) {
       console.log('Signin error:', result.error);
       return res.status(400).json({ error: result.error });
     }
 
-    const token = jwt.sign({ userId: result.data.user.id }, config.jwtSecret, { expiresIn: '1h' });
+    const token = jwt.sign({ userId: result.data.user.id, userName: result.data.user.user_name }, config.jwtSecret, { expiresIn: '1h' });
     console.log('Signin successful:', { userId: result.data.user.id });
     res.status(200).json({ token });
   } catch (error) {
@@ -38,6 +37,7 @@ export const signin = async (req, res) => {
     res.status(500).json({ error: error.message });
   }
 };
+
 
 // This function handles the forgot password functionality by resetting the user's password
 // and sending a password reset link to the user's email.
