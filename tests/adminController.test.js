@@ -3,7 +3,7 @@ import app from '../app.js'; // Ensure this path is correct
 import jwt from 'jsonwebtoken';
 import config from '../config/env.js';
 
-const token = jwt.sign({ userId: 1 }, config.jwtSecret, { expiresIn: '1h' });
+const token = jwt.sign({ userId: 1 }, config.jwtSecret, { expiresIn: '1d' });
 
 describe('Admin Controller', () => {
   it('should get attendance records', async () => {

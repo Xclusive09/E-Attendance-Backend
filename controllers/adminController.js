@@ -20,7 +20,7 @@ export const adminLogin = async (req, res) => {
       return res.status(401).json({ error: 'Invalid email or password' });
     }
 
-    const token = jwt.sign({ userId: admin.id, role: admin.role }, config.jwtSecret, { expiresIn: '1h' });
+    const token = jwt.sign({ userId: admin.id, role: admin.role }, config.jwtSecret, { expiresIn: '1d' });
     res.status(200).json({ token });
   } catch (error) {
     res.status(500).json({ error: 'Failed to log in' });

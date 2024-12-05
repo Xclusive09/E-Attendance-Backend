@@ -29,7 +29,7 @@ export const signin = async (req, res) => {
       return res.status(400).json({ error: result.error });
     }
 
-    const token = jwt.sign({ userId: result.data.user.id, userName: result.data.user.user_name }, config.jwtSecret, { expiresIn: '1h' });
+    const token = jwt.sign({ userId: result.data.user.id, userName: result.data.user.user_name }, config.jwtSecret, { expiresIn: '1d' });
     console.log('Signin successful:', { userId: result.data.user.id });
     res.status(200).json({ token });
   } catch (error) {
