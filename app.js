@@ -5,6 +5,7 @@ import authRoutes from './routes/authRoutes.js';
 import attendanceRoutes from './routes/attendanceRoutes.js';
 import adminRoutes from './routes/adminRoutes.js';
 import qrRoutes from './routes/qrRoutes.js';
+import userRoutes from './routes/userRoutes.js';
 import initializeAdmin from './utils/initializeAdmin.js';
 
 const app = express();
@@ -28,6 +29,8 @@ app.use('/auth', authRoutes);
 app.use('/attendance', attendanceRoutes);
 app.use('/admin', adminRoutes);
 app.use('/qr', qrRoutes);
+app.use('/user', userRoutes);
+
 
 // Ensure initializeAdmin is only called once
 initializeAdmin();
