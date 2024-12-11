@@ -33,6 +33,18 @@ export const markAttendance = async (req, res) => {
     }
     const userName = userDetails.data.user_name;
 
+    const lastAttendance = await Attendance.getLastAttendance(userId);
+    if (lastAttendance) {
+      const lastAttendanceTime = new Date(lastAttendance.timestamp);
+      const currentTime = new Date();
+      const timeDifference = currentTime - lastAttendanceTime;
+      const hoursDifference = timeDifference / (1000 * 60 * 60);
+
+      if (hoursDifference < 24) {
+        return res.status(403).json({ error: 'You can only check in once every 24 hours' });
+      }
+    }
+
     const userLocation = { lat: latitude, lng: longitude };
     const officeLocation = { lat: config.officeLatitude, lng: config.officeLongitude };
     const distance = getDistance(userLocation, officeLocation);

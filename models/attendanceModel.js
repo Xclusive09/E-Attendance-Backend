@@ -29,4 +29,17 @@ export const Attendance = {
       throw error;
     }
   },
+
+  getLastAttendance: async (userId) => {
+    try {
+      const [rows] = await pool.query(
+        'SELECT * FROM attendance WHERE user_id = ? ORDER BY timestamp DESC LIMIT 1',
+        [userId]
+      );
+      return rows.length > 0 ? rows[0] : null;
+    } catch (error) {
+      console.error('Error retrieving last attendance:', error.message);
+      throw error;
+    }
+  },
 };
