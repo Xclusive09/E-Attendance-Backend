@@ -8,20 +8,26 @@ export const adminLogin = async (req, res) => {
   const { email, password } = req.body;
 
   try {
-    const [rows] = await User.getAdminByEmail(email);
+    console.log('Admin login attempt:', { email, password }); // Debug log
+
+    const rows = await User.getAdminByEmail(email);
     if (rows.length === 0) {
+      console.log('Admin not found'); // Debug log
       return res.status(401).json({ error: 'Invalid email or password' });
     }
 
     const admin = rows[0];
     const isMatch = await bcrypt.compare(password, admin.password);
     if (!isMatch) {
+      console.log('Password does not match'); // Debug log
       return res.status(401).json({ error: 'Invalid email or password' });
     }
 
     const token = jwt.sign({ userId: admin.id, role: admin.role }, config.jwtSecret, { expiresIn: '1d' });
+    console.log('Admin login successful:', { token }); // Debug log
     res.status(200).json({ token });
   } catch (error) {
+    console.error('Error during admin login:', error.message);
     res.status(500).json({ error: 'Failed to log in' });
   }
 };

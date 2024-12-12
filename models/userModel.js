@@ -3,6 +3,17 @@ import bcrypt from 'bcryptjs';
 import pool from '../utils/mysqlClient.js';
 
 export const User = {
+
+  getAdminByEmail: async (email) => {
+    try {
+      const [rows] = await pool.query('SELECT * FROM users WHERE email = ? AND role = ?', [email, 'admin']);
+      return rows;
+    } catch (error) {
+      console.error('Error retrieving admin by email:', error.message);
+      throw error;
+    }
+  },
+
   // Method to create a new user
   createUser: async (email, password, fullName, userName, phoneNumber, role, createdAt) => {
     try {
