@@ -3,6 +3,7 @@ import { User } from '../models/userModel.js';
 import jwt from 'jsonwebtoken';
 import bcrypt from 'bcryptjs';
 import config from '../config/env.js';
+import pool from '../utils/mysqlClient.js'; 
 
 export const adminLogin = async (req, res) => {
   const { email, password } = req.body;

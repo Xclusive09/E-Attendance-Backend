@@ -7,7 +7,6 @@ export const Attendance = {
         'INSERT INTO attendance (user_id, user_name, timestamp) VALUES (?, ?, ?)',
         [userId, userName, new Date()]
       );
-
       console.log('Attendance marked:', result);
       return result;
     } catch (error) {
