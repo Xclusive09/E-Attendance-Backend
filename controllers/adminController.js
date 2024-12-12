@@ -2,14 +2,13 @@ import { Attendance } from '../models/attendanceModel.js';
 import { User } from '../models/userModel.js';
 import jwt from 'jsonwebtoken';
 import bcrypt from 'bcryptjs';
-import pool from '../utils/mysqlClient.js';
 import config from '../config/env.js';
 
 export const adminLogin = async (req, res) => {
   const { email, password } = req.body;
 
   try {
-    const [rows] = await pool.query('SELECT * FROM users WHERE email = ? AND role = ?', [email, 'admin']);
+    const [rows] = await User.getAdminByEmail(email);
     if (rows.length === 0) {
       return res.status(401).json({ error: 'Invalid email or password' });
     }
@@ -42,5 +41,27 @@ export const getAttendanceRecords = async (req, res) => {
     res.status(200).json({ attendanceRecords: data });
   } catch (error) {
     res.status(500).json({ error: error.message });
+  }
+};
+
+export const getAllAttendanceForDay = async (req, res) => {
+  const { date } = req.params;
+
+  try {
+    const records = await Attendance.getAllAttendanceForDay(date);
+    res.status(200).json({ records });
+  } catch (error) {
+    res.status(500).json({ error: 'Failed to retrieve attendance records for the day' });
+  }
+};
+
+export const getUserAttendanceRecords = async (req, res) => {
+  const { userId } = req.params;
+
+  try {
+    const records = await Attendance.getPersonalRecords(userId);
+    res.status(200).json({ records });
+  } catch (error) {
+    res.status(500).json({ error: 'Failed to retrieve user attendance records' });
   }
 };

@@ -42,4 +42,29 @@ export const Attendance = {
       throw error;
     }
   },
+
+  getAllAttendanceForDay: async (date) => {
+    try {
+      const [rows] = await pool.query(
+        'SELECT * FROM attendance WHERE DATE(timestamp) = ?',
+        [date]
+      );
+      console.log('All attendance for day retrieved:', rows);
+      return rows;
+    } catch (error) {
+      console.error('Error retrieving attendance for day:', error.message);
+      throw error;
+    }
+  },
+
+  getAttendanceRecords: async () => {
+    try {
+      const [rows] = await pool.query('SELECT * FROM attendance ORDER BY timestamp DESC');
+      console.log('All attendance records retrieved:', rows);
+      return rows;
+    } catch (error) {
+      console.error('Error retrieving attendance records:', error.message);
+      throw error;
+    }
+  },
 };
