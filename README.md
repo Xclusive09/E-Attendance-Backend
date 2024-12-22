@@ -1,6 +1,12 @@
+<<<<<<< HEAD
 # STARTUP KANO GPS Based ATTENDANCE
 
 GPS Based is an attendance management system that uses geofencing and time-based restrictions to mark attendance. The system is built using Node.js, Express, and SQL.
+=======
+# STARTUP KANO QR CODE ATTENDANCE
+
+Hub QR is an attendance management system that uses geofencing and time-based restrictions to mark attendance. The system is built using Node.js, Express, and Supabase.
+>>>>>>> parent of c47de63 (Updated the Guideline file)
 
 ## Table of Contents
 
