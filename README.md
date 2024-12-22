@@ -1,6 +1,6 @@
-# STARTUP KANO QR CODE ATTENDANCE
+# STARTUP KANO GPS-BASED ATTENDANCE SYSTEM
 
-Hub QR is an attendance management system that uses geofencing and time-based restrictions to mark attendance. The system is built using Node.js, Express, and Supabase.
+Hub GPS is an attendance management system that uses geofencing and time-based restrictions to mark attendance. The system is built using Node.js, Express, and MySQL.
 
 ## Table of Contents
 
@@ -8,16 +8,17 @@ Hub QR is an attendance management system that uses geofencing and time-based re
 - [Configuration](#configuration)
 - [Usage](#usage)
 - [API Endpoints](#api-endpoints)
+  - [Authentication](#authentication)
+  - [Attendance](#attendance)
+  - [Admin](#admin)
 - [Project Structure](#project-structure)
-- [Contributing](#contributing)
-- [License](#license)
 
 ## Installation
 
 1. **Clone the repository:**
     ```bash
-    git clone https://github.com/xclusive09/hub-qr.git
-    cd hub-qr
+    git clone https://github.com/xclusive09/hub-gps.git
+    cd hub-gps
     ```
 
 2. **Install dependencies:**
@@ -27,20 +28,35 @@ Hub QR is an attendance management system that uses geofencing and time-based re
 
 3. **Set up environment variables:**
     Create a `.env` file in the root directory and add the following variables:
-    DB_HOST=localhost
-DB_USER=fakeuser
-DB_PASSWORD=fakepassword
-DB_NAME=fake_database
-PORT=5000
-JWT_SECRET=fake_jwt_secret
-OFFICE_LATITUDE=12.345678
-OFFICE_LONGITUDE=98.765432
-OFFICE_RADIUS=0.1
-OPENING_HOURS=07:00:00
-CLOSING_HOURS=18:00:00
-EMAIL_USER=fakeemail@example.com
-EMAIL_PASS=fakeemailpassword
-FRONTEND_URL=http://fake-frontend-url.com
+    ```properties
+    AIVEN_DB_HOST=mysql-20847264-e-attendance-statrup-kano.h.aivencloud.com
+    AIVEN_DB_USER=avnadmin
+    AIVEN_DB_PASSWORD=AVNS_CD69PKXdXFW7ZCyB9Do
+    AIVEN_DB_NAME=attendance_system
+    AIVEN_DB_PORT=23829
+    PORT=5000
+    JWT_SECRET=423b9e1e262fc7fbc135cf3fe1574d3a042130b5b0d74333df037ee69d1615816c64316fa884b5037c091017313b4622a2d8d4294331c97c30613935c4adf23f
+
+    OFFICE_LATITUDE=11.969484892832641
+    OFFICE_LONGITUDE=8.557645371472917
+    OFFICE_RADIUS=10 // radius in km for office geofencing
+    OPENING_HOURS=07:00:00
+    CLOSING_HOURS=18:00:00
+
+    EMAIL_USER=xclusive@startupkano.com
+    EMAIL_PASS=@Xclusive09
+    FRONTEND_URL=https://startupqr.vercel.app/
+
+    ADMIN_EMAIL=admin@example.com
+    ADMIN_PASSWORD=adminpassword
+    ADMIN_FULL_NAME="Admin User"
+    ADMIN_USER_NAME=admin
+    ADMIN_PHONE_NUMBER=1234567890
+    ADMIN_ROLE=admin
+    CREATED_AT=$(date +'%Y-%m-%dT%H:%M:%S%z') # Current datetime can be set dynamically
+
+    # CORS Configuration
+    CORS_ORIGIN=*
     ```
 
 4. **Run the server:**
@@ -129,6 +145,15 @@ Once the server is running, you can interact with the API using tools like Postm
     }
     ```
 
+- **Get Personal Records**
+    ```http
+    GET /attendance/records
+    ```
+    **Headers:**
+    ```http
+    Authorization: Bearer <token>
+    ```
+
 ### Admin
 
 - **Admin Login**
@@ -143,7 +168,16 @@ Once the server is running, you can interact with the API using tools like Postm
     }
     ```
 
-- **Get Attendance Records**
+- **Get All Users**
+    ```http
+    GET /admin/users
+    ```
+    **Headers:**
+    ```http
+    Authorization: Bearer <token>
+    ```
+
+- **Get All Attendance Records**
     ```http
     GET /admin/attendance-records
     ```
@@ -152,11 +186,18 @@ Once the server is running, you can interact with the API using tools like Postm
     Authorization: Bearer <token>
     ```
 
-### QR Code
-
-- **Generate QR Code**
+- **Get Attendance Records for a Specific Day**
     ```http
-    GET /qr/generate
+    GET /admin/attendance-records/:date
+    ```
+    **Headers:**
+    ```http
+    Authorization: Bearer <token>
+    ```
+
+- **Get Attendance Records for a Specific User**
+    ```http
+    GET /admin/user-attendance/:userId
     ```
     **Headers:**
     ```http
@@ -166,7 +207,7 @@ Once the server is running, you can interact with the API using tools like Postm
 ## Project Structure
 
 ```plaintext
-hub-qr/
+hub-gps/
 ├── controllers/
 │   ├── adminController.js
 │   ├── attendanceController.js
