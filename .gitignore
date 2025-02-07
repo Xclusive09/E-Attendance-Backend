@@ -124,4 +124,3 @@ package-lock.json
 yarn.lock
 
 # SQL files
-records.sql
